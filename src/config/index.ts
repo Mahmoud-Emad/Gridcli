@@ -33,6 +33,10 @@ class GridCliConfig implements IGridCliConfig {
       const config = JSON.parse(data);
       this.mnemonic = config.mnemonic;
       this.network = config.network;
+      this.SSH_KEY = config.SSH_KEY;
+      this.balance = config.balance;
+      this.twinID = config.twinID;
+
     }
     return {
       mnemonic: this.mnemonic,

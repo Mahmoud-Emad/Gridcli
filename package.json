@@ -15,6 +15,7 @@
     "@threefold2/grid_client": "^2.5.6",
     "@types/node": "^22.5.3",
     "chalk": "^4.1.2",
+    "inquirer": "^10.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",
     "yargs": "^17.7.2"

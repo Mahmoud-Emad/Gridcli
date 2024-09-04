@@ -1,8 +1,11 @@
-interface IGridCliConfig {
+interface IConnectCommandOptions {
   mnemonic: string;
-  network: "dev" | "qa" | "test" | "main"
-  twinID: string;
   SSH_KEY: string;
+  network: "dev" | "qa" | "test" | "main"
+}
+
+interface IGridCliConfig extends IConnectCommandOptions {
+  twinID: string;
   balance: string;
 }
 
@@ -12,6 +15,7 @@ interface ITableData {
 }
 
 export {
+  IConnectCommandOptions,
   IGridCliConfig,
   ITableData,
 }
