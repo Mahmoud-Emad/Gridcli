@@ -1,14 +1,20 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "noImplicitAny": false,
     "module": "commonjs",
+    "target": "esnext",
+    "lib": ["ESNext", "DOM"],
+    "types": ["node"],
+    "declaration": true,
+    "declarationMap": true,
     "outDir": "./dist",
-    "strict": true,
     "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "allowJs": true,
+    "baseUrl": "."
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }
-
