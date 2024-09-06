@@ -14,8 +14,15 @@ interface ITableData {
   values: string[];
 }
 
+interface IGridTwin {
+  public_key: string,
+  mnemonic: string,
+  twinId: number
+}
+
 export {
   IConnectCommandOptions,
   IGridCliConfig,
   ITableData,
+  IGridTwin,
 }

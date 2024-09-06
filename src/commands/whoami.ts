@@ -11,7 +11,7 @@ export const whoamiCommand = {
   handler: (argv) => whoami(argv),
 };
 
-const whoami = async (argv?: yargs.Argv<{}>) => {
+export const whoami = async (argv?: yargs.Argv<{}>) => {
   try {
     GridCliLogger.info(GridLogMessages.SearchConfigFile);
 
@@ -30,6 +30,7 @@ const whoami = async (argv?: yargs.Argv<{}>) => {
 
     GridCliLogger.success(GridLogMessages.ConfigFound);
 
+    // TODO: Set/Load the SSHKey on/from the grid.
     // if (!values.SSH_KEY || values.SSH_KEY === "-") {
     //   promises.push(
     //     grid.tfchain.backendStorage.load("metadata").then(metadata => {

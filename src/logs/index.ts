@@ -9,6 +9,8 @@ enum GridLogMessages{
   SearchConfigFile = "📒 - Searching for the config file...",
   ConfigFound = "✅ - Config file found.",
   Connected = "✅ - Grid client connected successfully.",
+  ConnectingWallet = "📒 - Connecting your wallet.",
+  TwinCreated = "📒 - Config file updated, The twin ID created successfully.",
 }
 
 export {
