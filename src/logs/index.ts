@@ -11,16 +11,20 @@ enum GridLogMessages{
   ConfigFound = "✅ - Config file found.",
   
   // Grid connection logs 
-  Connected = "✅ - Grid client connected successfully.",
   ConnectingWallet = "📒 - Connecting your wallet.",
+  Connected = "✅ - Grid client connected successfully.",
+  Disconnected = "✅ - Grid client Disconnected.",
   TwinCreated = "📒 - Config file updated, The twin ID created successfully.",
 
-  // Deployment logs. 
+  // Deployment logs.
   HandleDeployment = "📒 - Updating the deployment with the necessary data.",
   DeploymentUpdated = "📒 - The deployment with the necessary data.",
   Deploying = "📒 - Deploying...",
   Deployed = "✅ - Deployed.",
   ListDeployment = "📒 - Listing the deployment details.",
+
+  // Node logs.
+  ListNodes = "📒 - Listing the available grid nodes.",
 }
 
 export {

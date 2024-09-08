@@ -149,5 +149,6 @@ const fetchGridData = async (grid: GridClient) => {
   }
 
   await grid.disconnect();
+  GridCliLogger.info(GridLogMessages.Disconnected)
   return { balance, twinID };
 };

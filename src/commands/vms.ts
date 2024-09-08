@@ -25,39 +25,6 @@ const handleDeploy = async (argv) => {
   }
 }
 
-const listNodes = async (argv) => {
-  const config = new GridCliConfig();
-  const options = config.load();
-  const grid = getGrid(options)
-  await grid.connect();
-  const nodes = await grid.capacity.getNodes();
-
-  let nodeInfo;
-  for (const node of nodes){
-    nodeInfo = {
-      nodeId: node.nodeId,
-      farmId: node.farmId,
-      healthy: node.healthy,
-      rentable: node.rentable,
-      CPU: node.total_resources.cru.toString() + " CPU",
-      Memory: formatResourceSize(node.total_resources.mru - node.used_resources.mru),
-      HDD: formatResourceSize(node.total_resources.hru - node.used_resources.hru),
-      SSD: formatResourceSize(node.total_resources.sru - node.used_resources.sru),
-      status: node.status,
-      country: node.location.country,
-    }
-
-    GridCliLogger.logTable(
-      {
-        headers: Object.keys(nodeInfo).map(capitalize),
-        values: Object.values(nodeInfo),
-      },
-    );
-  }
-  await grid.disconnect();
-  process.exit(0)
-}
-
 const deployCommand = {
   command: 'deploy',
   describe: 'Deploy a virtual machine using a yaml configuration file.',
@@ -78,25 +45,9 @@ export const vmsCommand = {
   builder: (yargs) => {
     return yargs
       .command(deployCommand)
-      .command(listCommand)
+      // .command(listCommand)
       .demandCommand(1, 'You need to specify a valid subcommand like deploy or list');
   },
   handler: () => {},
 };
 
-export const nodesCommand = {
-  command: 'nodes <command>',
-  describe: 'Logs some information about the grid nodes on a specific network.',
-  builder: (yargs) => {
-    return yargs
-      .command(listCommand)
-      // .demandCommand(1, 'You need to specify a valid subcommand like deploy or list');
-  },
-  handler: () => {},
-};
-
-const listCommand = {
-  command: 'list',
-  describe: 'List all nodes based on the selected network.',
-  handler: listNodes
-};

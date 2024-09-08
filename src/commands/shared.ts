@@ -69,5 +69,7 @@ export const deployDeployment = async (deployment: DeploymentModel) => {
       [10, 10]
     );
   }
+
   await grid.disconnect();
+  GridCliLogger.info(GridLogMessages.Disconnected)
 };
