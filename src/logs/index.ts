@@ -6,11 +6,21 @@ enum GridErrorMessages{
 }
 
 enum GridLogMessages{
+  // Config logs
   SearchConfigFile = "📒 - Searching for the config file...",
   ConfigFound = "✅ - Config file found.",
+  
+  // Grid connection logs 
   Connected = "✅ - Grid client connected successfully.",
   ConnectingWallet = "📒 - Connecting your wallet.",
   TwinCreated = "📒 - Config file updated, The twin ID created successfully.",
+
+  // Deployment logs. 
+  HandleDeployment = "📒 - Updating the deployment with the necessary data.",
+  DeploymentUpdated = "📒 - The deployment with the necessary data.",
+  Deploying = "📒 - Deploying...",
+  Deployed = "✅ - Deployed.",
+  ListDeployment = "📒 - Listing the deployment details.",
 }
 
 export {

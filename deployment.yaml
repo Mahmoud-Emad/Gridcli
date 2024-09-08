@@ -1,0 +1,31 @@
+name: testdeployment
+network:
+  name: wedtest
+  ip_range: "10.249.0.0/16"
+machines:
+  - name: testvm
+    node_id: 11
+    disks:
+      - name: wedDisk
+        size: 8
+        mountpoint: /testdisk
+    public_ip: false
+    public_ip6: false
+    planetary: true
+    mycelium: false
+    cpu: 1
+    memory: 2048
+  # Uncomment this line to deploy another machine and duplicate it as needed. 
+  # - name: testvm2
+  #   node_id: 11
+  #   disks:
+  #     - name: wedDisk2
+  #       size: 8
+  #       mountpoint: /testdisk
+  #   public_ip: false
+  #   public_ip6: false
+  #   planetary: true
+  #   mycelium: true
+  #   cpu: 1
+  #   memory: 2048
+

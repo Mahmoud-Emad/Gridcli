@@ -22,17 +22,15 @@ class GridCliLogger{
     )
   }
 
-  static logTable(data: ITableData) {
+  static logTable(data: ITableData, colWidths?: number[]) {
     const table = new Table({
       head: data.headers,
-      colWidths: data.headers.map(() => Math.floor(process.stdout.columns / data.headers.length - 5)),
+      colWidths: !colWidths ? data.headers.map(() => Math.floor(process.stdout.columns / data.headers.length - 5)) : colWidths,
       wordWrap: true,
     });
   
     const values = data.values.length ? data.values : data.headers.map(() => "-");
-    
     table.push(values);
-
     GridCliLogger.info(table.toString())
   }
   

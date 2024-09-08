@@ -21,8 +21,10 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/yargs": "^17.0.33",
     "cli-table3": "^0.6.5",
+    "js-yaml": "^4.1.0",
     "nodemon": "^3.1.4"
   }
 }
