@@ -21,6 +21,11 @@ export const getGrid = (options: IConnectCommandOptions): GridClient => {
   });
 };
 
+/**
+ * Deploys a deployment using the Grid-CLI tool.
+ * Connects to the wallet, updates deployment data, deploys the machines, lists the deployment details, and disconnects.
+ * @param deployment - The deployment model to be deployed.
+ */
 export const deployDeployment = async (deployment: DeploymentModel) => {
   GridCliLogger.info(GridLogMessages.SearchConfigFile);
   const config = new GridCliConfig();
@@ -73,3 +78,23 @@ export const deployDeployment = async (deployment: DeploymentModel) => {
   await grid.disconnect();
   GridCliLogger.info(GridLogMessages.Disconnected)
 };
+
+/**
+ * Generates a random string of a specified length.
+ * 
+ * @param length - The length of the generated string (default is 7).
+ * @returns A randomly generated string consisting of lowercase letters and numbers.
+ */
+export function generateName(prefix: string, length = 7): string {
+  const chars = "abcdefghijklmnopqrstuvwxyz";
+  const nums = "0123456789";
+  const allChars = chars + nums
+
+  let str = "";
+
+  for (let i = 0; i < length; i++) {
+    str += allChars[Math.floor(Math.random() * allChars.length)];
+  }
+
+  return prefix + str
+}
