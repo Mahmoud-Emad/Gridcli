@@ -1,14 +1,31 @@
 {
   "name": "grid-cli",
   "version": "1.0.0",
+  "author": "Mahmoud Emad",
+  "homepage": "https://github.com/Mahmoud-Emad/grid-cli/blob/development/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mahmoud-Emad/grid-cli.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
     "grid-cli": "./dist/index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "cli",
+    "grid",
+    "machine",
+    "container",
+    "virtual machine",
+    "virtual",
+    "vm",
+    "vms",
+    "threefold",
+    "deploy",
+    "host"
+  ],
   "license": "ISC",
   "description": "",
   "dependencies": {
