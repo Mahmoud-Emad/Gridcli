@@ -44,7 +44,7 @@ export const deployDeployment = async (deployment: DeploymentModel) => {
     machine.env = { SSH_KEY: options.SSH_KEY };
   }
   deployment.description = "Deployment deployed using the Grid-CLI tool.";
-  GridCliLogger.info(GridLogMessages.DeploymentUpdated);
+  GridCliLogger.success(GridLogMessages.DeploymentUpdated);
 
   GridCliLogger.info(GridLogMessages.Deploying);
   await grid.machines.deploy(deployment);
@@ -156,8 +156,8 @@ export function parseMemory(memory: string | number): number {
  * @returns The parsed CPU value.
  */
 export function parseCPU(cpu: string | number): number {
-  return typeof cpu === 'string' && cpu.includes('Core')
-    ? +cpu.replace(' Core', '')
+  return typeof cpu === 'string' && (cpu.toLowerCase().includes('core') || cpu.toLowerCase().includes('cores'))
+    ? +cpu.trim().replace('core', '')
     : +cpu;
 }
 

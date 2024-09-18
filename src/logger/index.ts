@@ -6,19 +6,19 @@ import { ITableData } from '../types';
 class GridCliLogger{
   static info(message: string){
     console.log(
-      chalk.blue(message)
+      chalk.blue(`📒 - ${message}`)
     )
   }
-
+  
   static error(message: string){
     console.log(
-      chalk.red(message)
+      chalk.red(`💣 - ${message}`)
     )
   }
-
+  
   static success(message: string){
     console.log(
-      chalk.green(message)
+      chalk.green(`✅ - ${message}`)
     )
   }
 
@@ -31,7 +31,9 @@ class GridCliLogger{
   
     const values = data.values.length ? data.values : data.headers.map(() => "-");
     table.push(values);
-    GridCliLogger.info(table.toString())
+    console.log(
+      chalk.blue(table.toString())
+    )
   }
   
 }

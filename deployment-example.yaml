@@ -1,0 +1,17 @@
+name: testdeployment
+network:
+  name: wedtest
+  ip_range: "10.10.0.0/16"
+machines:
+  - name: testvm
+    node_id: 11
+    disks:
+      - name: wedDisk
+        size: 8
+        mountpoint: /testdisk
+    public_ip: false
+    public_ip6: false
+    planetary: true
+    mycelium: false
+    cpu: 1
+    memory: 2048 # 2GB
