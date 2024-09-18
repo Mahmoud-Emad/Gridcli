@@ -11,7 +11,7 @@ const listNodes = async (argv) => {
   const grid = getGrid(options);
   GridCliLogger.info(GridLogMessages.ConnectingWallet);
   await grid.connect();
-  GridCliLogger.info(GridLogMessages.Connected);
+  GridCliLogger.success(GridLogMessages.Connected);
   GridCliLogger.info(GridLogMessages.ListNodes);
   const nodes = await grid.capacity.filterNodes({ status });
 

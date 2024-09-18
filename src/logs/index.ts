@@ -25,6 +25,7 @@ enum GridLogMessages{
 
   // Node logs.
   ListNodes = "📒 - Listing the available grid nodes.",
+  FilterNodes = "📒 - Filtering the grid nodes based on the requirements.",
 }
 
 export {

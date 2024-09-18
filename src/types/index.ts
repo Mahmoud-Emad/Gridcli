@@ -51,10 +51,23 @@ interface DeploymentModel {
   description: string;
 }
 
+interface IDeployMachinePrompt{
+  networkName: string;
+  networkIPRange: string;
+  machineName: string;
+  diskSpace: number;
+  diskName: string;
+  diskMountpoint: string;
+  cpu: number;
+  memory: number;
+  networkAccess: Array<string>;
+}
+
 export {
   IConnectCommandOptions,
   IGridCliConfig,
   ITableData,
   IGridTwin,
   DeploymentModel,
+  IDeployMachinePrompt
 }

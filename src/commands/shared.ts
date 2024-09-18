@@ -1,5 +1,5 @@
 import { GridClient, KeypairType, NetworkEnv } from "@threefold2/grid_client";
-import { DeploymentModel, IConnectCommandOptions } from "../types";
+import { DeploymentModel, IConnectCommandOptions, IDeployMachinePrompt } from "../types";
 import { GridCliConfig } from "../config";
 import { GridCliLogger } from "../logger";
 import { GridLogMessages } from "../logs";
@@ -35,7 +35,7 @@ export const deployDeployment = async (deployment: DeploymentModel) => {
   GridCliLogger.info(GridLogMessages.ConnectingWallet);
   const grid = getGrid(options);
   await grid.connect();
-  GridCliLogger.info(GridLogMessages.Connected);
+  GridCliLogger.success(GridLogMessages.Connected);
 
   GridCliLogger.info(GridLogMessages.HandleDeployment);
   for (const machine of deployment.machines) {
@@ -48,7 +48,7 @@ export const deployDeployment = async (deployment: DeploymentModel) => {
 
   GridCliLogger.info(GridLogMessages.Deploying);
   await grid.machines.deploy(deployment);
-  GridCliLogger.info(GridLogMessages.Deployed);
+  GridCliLogger.success(GridLogMessages.Deployed);
 
   GridCliLogger.info(GridLogMessages.ListDeployment);
   const dValues = await grid.machines.getObj(deployment.name);
@@ -58,11 +58,11 @@ export const deployDeployment = async (deployment: DeploymentModel) => {
     machines = {
       name: values.name,
       nodeId: values.nodeId,
-      publicIP: values.publicIP,
       contractId: values.contractId,
+      publicIPv4: values.publicIP && values.publicIP.ip ? values.publicIP.ip : "-",
+      publicIPv6: values.publicIP && values.publicIP.ip6 ? values.publicIP.ip6 : "-",
       myceliumIP: values.myceliumIP,
       planetary: values.planetary,
-      interfaces: values.interfaces,
     };
 
     console.log("\n");
@@ -71,7 +71,6 @@ export const deployDeployment = async (deployment: DeploymentModel) => {
         headers: Object.keys(machines).map(capitalize),
         values: Object.values(machines),
       },
-      [10, 10]
     );
   }
 
@@ -97,4 +96,79 @@ export function generateName(prefix: string, length = 7): string {
   }
 
   return prefix + str
+}
+
+/**
+ * Retrieves the node ID based on the provided machine deployment specifications.
+ * 
+ * @param specs - The specifications for deploying the machine.
+ * @returns A promise that resolves to the node ID.
+ * @throws An error if no matching node is found.
+ */
+export async function getNodeId(specs: IDeployMachinePrompt): Promise<number> {
+  try {
+    // Load configuration and initialize the grid client
+    const config = new GridCliConfig();
+    const options = config.load();
+    const grid = getGrid(options);
+
+    // Log wallet connection process
+    GridCliLogger.info(GridLogMessages.ConnectingWallet);
+    await grid.connect();
+
+    // Filter available nodes based on the deployment specifications
+    const nodes = await grid.nodes.filter({
+      mru: parseMemory(specs.memory),
+      cru: parseCPU(specs.cpu),
+      hru: parseDiskSpace(specs.diskSpace),
+      publicIPs: specs.networkAccess.includes("publicIp4"),
+      hasIPv6: specs.networkAccess.includes("publicIp4"),
+    });
+
+    if (nodes.length > 0) {
+      return nodes[0].nodeId;
+    } else {
+      throw new Error('No matching nodes found for the provided specifications.');
+    }
+  } catch (error) {
+    // Handle errors gracefully
+    GridCliLogger.error(`Error retrieving node ID: ${error.message}`);
+    throw error;
+  }
+}
+
+/**
+ * Parses the memory specification and returns the value in the required format.
+ * 
+ * @param memory - The memory specification (e.g., "16GB").
+ * @returns The parsed memory value.
+ */
+export function parseMemory(memory: string | number): number {
+  return typeof memory === 'string' && memory.includes('GB')
+    ? +memory.replace('GB', '')
+    : +memory;
+}
+
+/**
+ * Parses the CPU specification and returns the value in the required format.
+ * 
+ * @param cpu - The CPU specification (e.g., "4 Core").
+ * @returns The parsed CPU value.
+ */
+export function parseCPU(cpu: string | number): number {
+  return typeof cpu === 'string' && cpu.includes('Core')
+    ? +cpu.replace(' Core', '')
+    : +cpu;
+}
+
+/**
+ * Parses the disk space specification and returns the value in the required format.
+ * 
+ * @param diskSpace - The disk space specification (e.g., "500GB").
+ * @returns The parsed disk space value.
+ */
+export function parseDiskSpace(diskSpace: string | number): number {
+  return typeof diskSpace === 'string' && diskSpace.includes('GB')
+    ? +diskSpace.replace('GB', '')
+    : +diskSpace;
 }

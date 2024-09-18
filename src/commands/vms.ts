@@ -2,20 +2,42 @@ import inquirer from "inquirer";
 import fs from "fs";
 import * as yaml from "js-yaml";
 import { DeploymentModel } from "../types";
-import { deployDeployment, generateName, getGrid } from "./shared";
+import { deployDeployment, generateName, getNodeId, parseCPU, parseDiskSpace, parseMemory } from "./shared";
 import {
+  isPrivateIP,
   validateAlphanumeric,
+  validateCPUnit,
   validateDiskSpace,
+  validateMemorySpace,
   validateMountpoint,
   validateSelectingNetwork,
 } from "../validators";
-import { GridCliConfig } from "../config";
 import { GridCliLogger } from "../logger";
-import { capitalize, formatResourceSize } from "../utils";
+import { GridLogMessages } from "../logs";
 
 const handleDeployPrompt = async () => {
   const defaultMessage = "or press 'Enter' to take the default generated one";
   const answers = await inquirer.prompt([
+    {
+      type: "input",
+      name: "networkName",
+      message: `Enter your deployment network name, ${defaultMessage}:`,
+      default: generateName("net", 5),
+      validate: (input) =>
+        validateAlphanumeric(input) === undefined
+          ? true
+          : validateAlphanumeric(input),
+    },
+    {
+      type: "input",
+      name: "networkIPRange",
+      message: `Enter your deployment network IP range, ${defaultMessage}:`,
+      default: "10.10.0.0/16",
+      validate: (input) =>
+        isPrivateIP(input) === undefined
+          ? true
+          : isPrivateIP(input),
+    },
     {
       type: "input",
       name: "machineName",
@@ -30,7 +52,7 @@ const handleDeployPrompt = async () => {
       type: "input",
       name: "diskSpace",
       message: `Enter the required disk space, ${defaultMessage}:`,
-      default: "10GB",
+      default: "15GB",
       validate: (input) =>
         validateDiskSpace(input) === undefined
           ? true
@@ -57,8 +79,28 @@ const handleDeployPrompt = async () => {
           : validateMountpoint(input),
     },
     {
+      type: "input",
+      name: "cpu",
+      message: `Enter the required cpu cores, ${defaultMessage}:`,
+      default: "1 Core",
+      validate: (input) =>
+        validateCPUnit(input) === undefined
+          ? true
+          : validateCPUnit(input),
+    },
+    {
+      type: "input",
+      name: "memory",
+      message: `Enter the required memory space, ${defaultMessage}:`,
+      default: "2GB",
+      validate: (input) =>
+        validateMemorySpace(input) === undefined
+          ? true
+          : validateMemorySpace(input),
+    },
+    {
       type: "checkbox",
-      name: "public_ip",
+      name: "networkAccess",
       message: `Network access: What network would you like to add?`,
       validate: (choices) =>
         validateSelectingNetwork(choices as any) === undefined
@@ -69,13 +111,12 @@ const handleDeployPrompt = async () => {
           name: "Mycelium network:",
           value: "mycelium",
           checked: true,
-          // disabled: "The 'Mycelium network' option is enabled by default.",
           description:
             "Mycelium is an IPv6 overlay network. Each node that joins the overlay network will receive an overlay network IP.",
         },
         {
           name: "Public IP v4",
-          value: "publicIp",
+          value: "publicIp4",
           checked: false,
           description:
             "An Internet Protocol version 4 address that is globally unique and accessible over the internet.",
@@ -96,10 +137,56 @@ const handleDeployPrompt = async () => {
         },
       ],
       default: "mycelium",
-      // default: "mnt/data",
-      // validate: (input) => (validateMountpoint(input) === undefined ? true : validateMountpoint(input)),
     },
   ]);
+
+  let nodeId: number;
+  const extraOptions = await inquirer.prompt([
+    {
+      type: "input",
+      name: "filterNodes",
+      message: `Specify a node to deploy on, or leave blank to let us choose one based on your specifications.`,
+      validate: (input) => isNaN(+input) ? "This field accepts only numbers." : true
+    },
+  ])
+
+  if (!extraOptions.filterNodes){
+    GridCliLogger.info(GridLogMessages.FilterNodes);
+    nodeId = await getNodeId(answers);
+  } else {
+    nodeId = extraOptions.filterNodes 
+  }
+
+
+  const networkAccess = answers.networkAccess as Array<string>
+  const deployment = {
+    name: answers.machineName,
+    network: {
+      ip_range: answers.networkIPRange,
+      name: answers.networkName,
+    },
+    machines: [
+      {
+        name: answers.machineName,
+        disks: [
+          {
+            name: answers.diskName,
+            mountpoint: answers.diskMountpoint,
+            size: parseDiskSpace(answers.diskSpace),
+          }
+        ],
+        cpu: parseCPU(answers.cpu),
+        memory: parseMemory(answers.memory) * 1024,
+        mycelium: networkAccess.includes("mycelium"),
+        public_ip: networkAccess.includes("publicIp4"),
+        public_ip6: networkAccess.includes("publicIp6"),
+        planetary: networkAccess.includes("planetary"),
+        node_id: nodeId,
+      }
+    ]
+  }
+
+  return await deployDeployment(deployment as DeploymentModel);
 };
 
 const handleDeploy = async (argv) => {
