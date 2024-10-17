@@ -6,19 +6,25 @@ import { ITableData } from '../types';
 class GridCliLogger{
   static info(message: string){
     console.log(
-      chalk.blue(`📒 - ${message}`)
+      chalk.blue(message)
     )
   }
-  
+
+  static warn(message: string){
+    console.log(
+      chalk.yellow(message)
+    )
+  }
+
   static error(message: string){
     console.log(
-      chalk.red(`💣 - ${message}`)
+      chalk.red(message)
     )
   }
   
   static success(message: string){
     console.log(
-      chalk.green(`✅ - ${message}`)
+      chalk.green(message)
     )
   }
 

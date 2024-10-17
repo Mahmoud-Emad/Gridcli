@@ -1,8 +1,13 @@
 enum GridErrorMessages{
   NotConnected = "Before accessing this command, please use the 'connect' command to link your account.",
-  NotValidMnemonic = "The mnemonic saved in the config file isn't valid, please re-connect.",
+  NotValidMnemonic = "The mnemonic isn't valid, try to use a valid mnemonic.",
   TwinNotExist = "Couldn't find a user for the provided mnemonic on the provided network.",
   Aborted = "Aborted",
+  OptionNotValid = "The option is not valid.",
+  NotValidNetwork = "Network is not valid, only dev, qa, test and main are supported.",
+  MnemonicNotProvided = "The `--mnemonic` option is required when not running in interactive mode, use `-i` to run in interactive mode.",
+  SSHNotProvided = "The `--SSH_KEY` option is required when not running in interactive mode, use `-i` to run in interactive mode",
+  NetworkNotProvided = "The `--network` option is required when not running in interactive mode, defaulting to `dev`.",
 }
 
 enum GridLogMessages{

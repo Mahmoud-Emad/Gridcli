@@ -12,15 +12,17 @@ TS GridCli offers multiple ways to deploy and manage virtual machines on the gri
 - **Interactive Command-line Deployment**: Missing parameters can be filled interactively via prompts.
 - **Flexible Command-line Options**: Users can provide parameters directly via CLI arguments, and the tool will prompt for any missing values.
 - **Node Management**: The tool allows users to list and filter nodes based on various statuses (e.g., up, standby, down).
+- **Environment Configuration**: Set up your environment with mnemonic, SSH key, and network via the `connect` command, supporting both interactive and non-interactive modes.
+- **Grid Twin Management**: Automatically handle twin creation if one does not exist.
 
 ## Installation
 
 1. Clone the repository:
 
-    ```bash
-      git clone https://github.com/Mahmoud-Emad/grid-cli.git
-      cd grid-cli
-    ```
+  ```bash
+    git clone https://github.com/Mahmoud-Emad/grid-cli.git
+    cd grid-cli
+  ```
 
 2. Install the dependencies:
 
@@ -30,9 +32,9 @@ TS GridCli offers multiple ways to deploy and manage virtual machines on the gri
 
 3. Build and link the CLI tool:
 
-    ```bash
+  ```bash
     make build
-    ```
+  ```
 
 ## Usage
 
@@ -86,21 +88,33 @@ Prints the current connected wallet information, including network, balance, SSH
 grid-cli whoami
 ```
 
-Example output:
-![whoami command response](./docs/images/whoami_response.png)
-
 #### `connect`
 
-Prompts for wallet secret, SSH key, and the network (e.g., dev, qa, test, main).
+Sets up the environment by inputting the wallet mnemonic, SSH key, and network (e.g., dev, qa, test, main). It supports both interactive and non-interactive modes.
 
 ```bash
-grid-cli connect
+grid-cli connect --interactive
 ```
+
+In non-interactive mode, you can provide the mnemonic, SSH key, and network directly:
+
+```bash
+grid-cli connect --mnemonic "your-mnemonic" --SSH_KEY "your-ssh-key" --network "main"
+```
+
+Or set configuration options via the `--set` flag:
+
+```bash
+grid-cli connect --set network=dev --set mnemonic="your-mnemonic"
+```
+
+If a twin does not exist for the provided mnemonic, you will be prompted to create one.
+> PS: Use the `--set` if you already have a saved config file and need to make changes, such as setting a different SSH key, or connecting to another network.
+
 
 #### `nodes`
 
 Lists the available nodes on the Threefold Grid. You can filter nodes by status, such as `up`, `standby`, or `down`.
-PS: Additional filter options will be supported soon.
 
 ```bash
 grid-cli nodes --status="up"
@@ -129,6 +143,7 @@ grid-cli vms deploy --network-name="customnetwork" --machine-name="myvm" --node-
 - **List VMs**: List all deployed virtual machines.
 - **Get VM**: Retrieve details of a specific VM.
 - **Delete VM**: Remove a deployed VM from the grid.
+- **Additional Node Filtering Options**: Filter nodes based on CPU, memory, or other attributes.
 
 ---
 
